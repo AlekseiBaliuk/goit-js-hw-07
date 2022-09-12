@@ -24,39 +24,67 @@ function createGallery(galleryItems) {
     .join('');
 }
 
-let instance;
+// let instance;
 
-function onClick(e) {
-  e.preventDefault();
+// function onClick(e) {
+//   e.preventDefault();
 
-  if (e.target.classList.contains('gallery')) {
+//   if (e.target.classList.contains('gallery')) {
+//     return;
+//   }
+
+//   instance = basicLightbox.create(`
+//       <img src="${e.target.dataset.source}" width="800" height="600">
+//   `);
+
+//   instance.show();
+//   onOpenModal();
+// }
+
+// function onOpenModal() {
+//   window.addEventListener('keydown', onEscKeyPress);
+// }
+
+// function onCloseModal() {
+//   window.removeEventListener('keydown', onEscKeyPress);
+// }
+
+// function onEscKeyPress(event) {
+//   const ESC_KEY_PRESS = 'Escape';
+//   const isEscKey = event.code === ESC_KEY_PRESS;
+
+//   if (isEscKey) {
+//     onCloseModal();
+//     instance.close();
+//   }
+// }
+
+// console.log(galleryItems);
+
+// ==========================================
+function onClick(evt) {
+  evt.preventDefault();
+
+  if (evt.target.nodeName !== 'IMG') {
     return;
   }
 
-  instance = basicLightbox.create(`
-      <img src="${e.target.dataset.source}" width="800" height="600">
-  `);
+  const instance = basicLightbox.create(
+    `<img src="${evt.target.dataset.source}" width="800" height="600">`,
+    {
+      onShow: () => {
+        window.addEventListener('keydown', onEscKeyPress);
+      },
+      onClose: () => {
+        window.removeEventListener('keydown', onEscKeyPress);
+      },
+    }
+  );
 
-  instance.show();
-  onOpenModal();
-}
-
-function onOpenModal() {
-  window.addEventListener('keydown', onEscKeyPress);
-}
-
-function onCloseModal() {
-  window.removeEventListener('keydown', onEscKeyPress);
-}
-
-function onEscKeyPress(event) {
-  const ESC_KEY_PRESS = 'Escape';
-  const isEscKey = event.code === ESC_KEY_PRESS;
-
-  if (isEscKey) {
-    onCloseModal();
-    instance.close();
+  function onEscKeyPress(evt) {
+    if (evt.keyCode === 27) {
+      instance.close();
+    }
   }
+  instance.show();
 }
-
-console.log(galleryItems);
